@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
+    const [products, setProducts] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    const handleBidBtn = (product) =>
+        navigate(`/products/bid/${product.name}/${product.price}`);
+
+    //fetch the products from the database via the GET api created in express 
+    useEffect(() => {
+        const fetchProducts = () => {
+            fetch('http://localhost:4000/getproducts')
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data)
+                    //loads product data into state
+                    setProducts(data);
+                    //sets loading variable as false
+                    setLoading(false);
+                });
+        };
+        fetchProducts();
+    }, []);
+
     return (
         <div>
             <div className="table__container">
@@ -19,27 +43,24 @@ const Products = () => {
                             <th>Edit</th>
                         </tr>
                     </thead>
-                    {/* Data for display, we will later get it from the server */}
                     <tbody>
-                        <tr>
-                            <td>Tesla Model S</td>
-                            <td>$30,000</td>
-                            <td>@david_show</td>
-                            <td>@elon_musk</td>
-                            <td>
-                                <button>Edit</button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Ferrari 2021</td>
-                            <td>$50,000</td>
-                            <td>@bryan_scofield</td>
-                            <td>@david_asaolu</td>
-                            <td>
-                                <button>Edit</button>
-                            </td>
-                        </tr>
+                        {loading ? (
+                            <tr>
+                                <td>Loading</td>
+                            </tr>
+                        ) : (
+                            products.map((product) => (
+                                <tr key={`${product.name}${product.price}`}>
+                                    <td>{product.name}</td>
+                                    <td>{product.price}</td>
+                                    <td>{product.last_bidder || 'None'}</td>
+                                    <td>{product.owner}</td>
+                                    <td>
+                                        <button onClick={() => handleBidBtn(product)}>Edit</button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>

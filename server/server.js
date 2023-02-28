@@ -5,8 +5,6 @@ const mongoose = require('mongoose')
 const UserModel = require('./models/Users')
 const ProductModel = require('./models/Products');
 mongoose.connect('mongodb+srv://zachlipscomb:college86@elitascloset.jrvithe.mongodb.net/elitascloset?retryWrites=true&w=majority')
-
-//New imports
 const http = require('http').Server(app);
 const cors = require('cors');
 
@@ -23,14 +21,19 @@ socketIO.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('🔥: A user disconnected');
     });
+    socket.on('addProduct', (data) => {
+        console.log(data)
+    })
 });
 
+//general middleware for routes
 app.use(cors());
 app.use(express.json())
 
+
 // testing database
-app.get('/getUsers', (req, res) => {
-    UserModel.find({}, (err, result) => {
+app.get('/getproducts', (req, res) => {
+    ProductModel.find({}, (err, result) => {
         if (err) {
             res.json(err)
         }
@@ -38,9 +41,13 @@ app.get('/getUsers', (req, res) => {
     })
 })
 
-// use async function
-app.post('/createUser', async (req, res) => {
-    const user = req.body
+//create users (always use async functions)
+app.post('/createuser', async (req, res) => {
+    const user = {
+        "username": req.body.username,
+        "name": req.body.name,
+        "password": req.body.password
+    }
     // create new user using user model and past the data (user) to the database
     const newUser = new UserModel(user)
     await newUser.save()
@@ -49,6 +56,7 @@ app.post('/createUser', async (req, res) => {
 
 })
 
+//add products 
 app.post('/addproduct', async (req, res) => {
     const product = req.body
     // create new user using user model and past the data (user) to the database
@@ -59,7 +67,7 @@ app.post('/addproduct', async (req, res) => {
 
 })
 
-
+//test api
 app.get('/api', (req, res) => {
     res.json({
         message: 'Hello world',

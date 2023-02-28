@@ -14,7 +14,7 @@ const ProductSchema = new mongoose.Schema({
     },
     last_bidder: {
         type: String,
-        required: true
+        required: false
     }
 })
 
