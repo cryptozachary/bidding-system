@@ -4,7 +4,7 @@ const PORT = 4000;
 const mongoose = require('mongoose')
 const UserModel = require('./models/Users')
 const ProductModel = require('./models/Products');
-mongoose.connect('mongodb+srv://zachlipscomb:college86@elitascloset.jrvithe.mongodb.net/elitascloset?retryWrites=true&w=majority')
+mongoose.connect(proceess.env.MongoDB)
 const http = require('http').Server(app);
 const cors = require('cors');
 
