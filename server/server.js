@@ -1,12 +1,18 @@
 const express = require('express');
+require('dotenv').config()
 const app = express();
 const PORT = 4000;
 const mongoose = require('mongoose')
 const UserModel = require('./models/Users')
 const ProductModel = require('./models/Products');
-mongoose.connect('mongodb+srv://zachlipscomb:college86@elitascloset.jrvithe.mongodb.net/elitascloset?retryWrites=true&w=majority')
 const http = require('http').Server(app);
 const cors = require('cors');
+console.log(process.MONGO_DB_ATLAS)
+console.log(process.env.MONGO_DB_ATLAS)
+
+mongoose.connect(process.env.MONGO_DB_ATLAS, {
+    useNewUrlParser: true,
+})
 
 // test variable to save product data via socket 
 let globalProduct = {}
