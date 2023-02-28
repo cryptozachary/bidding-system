@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios"
 
 const AddProduct = ({ socket }) => {
     const [name, setName] = useState('');
@@ -10,12 +11,18 @@ const AddProduct = ({ socket }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({ name, price, owner: localStorage.getItem('userName') });
-        socket.emit('addProduct', {
-            name,
-            price,
-            owner: localStorage.getItem('username'),
-        })
+
+        // save the product data to an object to send to api
+        let productData = {
+            "name": name,
+            "price": price,
+            "owner": owner
+        }
+
+        // send data to createproduct api with axios, send json object
+        axios.post('http://localhost:4000/addproduct', productData)
+        // send socketio the same data
+        socket.emit('addProduct', productData)
         navigate('/products');
     };
 

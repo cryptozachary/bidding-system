@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
+
+
 const Home = () => {
 
+    //state variables
     const [userName, setUserName] = useState('')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
 
     const navigate = useNavigate();
-    console.log('rendred')
+    console.log('rendered')
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        // send data to createuser api with axios, send json object
         axios.post('http://localhost:4000/createuser', {
             "username": userName,
             "name": name,
@@ -19,7 +24,7 @@ const Home = () => {
         })
         localStorage.setItem('userName', userName);
         // navigate('/products');
-        console.log(userName)
+
     };
 
     return (

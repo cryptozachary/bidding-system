@@ -41,7 +41,7 @@ body {
 .home__input,
 .addProduct__form input,
 .bidProduct__form input {
-  width: 70%;
+  width: 30%;
   padding: 10px;
   border-radius: 5px;
   margin: 15px 0;
@@ -118,6 +118,7 @@ th {
   flex-direction: column;
   width: 80%;
   margin: 0 auto;
+  align-items: center;
 }
 
 .addProduct__cta,

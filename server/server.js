@@ -8,6 +8,9 @@ mongoose.connect('mongodb+srv://zachlipscomb:college86@elitascloset.jrvithe.mong
 const http = require('http').Server(app);
 const cors = require('cors');
 
+// test variable to save product data via socket 
+let globalProduct = {}
+
 
 const socketIO = require('socket.io')(http, {
     cors: {
@@ -23,6 +26,8 @@ socketIO.on('connection', (socket) => {
     });
     socket.on('addProduct', (data) => {
         console.log(data)
+        globalProduct = data
+        console.log(globalProduct)
     })
 });
 
@@ -58,13 +63,17 @@ app.post('/createuser', async (req, res) => {
 
 //add products 
 app.post('/addproduct', async (req, res) => {
-    const product = req.body
+    const product = {
+        "name": req.body.name,
+        "price": req.body.price,
+        "owner": req.body.owner
+    }
     // create new user using user model and past the data (user) to the database
     const newProduct = new ProductModel(product)
     await newProduct.save()
 
     res.json(product)
-
+    console.log('Product Added!')
 })
 
 //test api
