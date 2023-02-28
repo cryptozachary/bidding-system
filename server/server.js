@@ -5,6 +5,7 @@ const PORT = 4000;
 const mongoose = require('mongoose')
 const UserModel = require('./models/Users')
 const ProductModel = require('./models/Products');
+mongoose.connect(proceess.env.MongoDB)
 const http = require('http').Server(app);
 const cors = require('cors');
 console.log(process.MONGO_DB_ATLAS)
