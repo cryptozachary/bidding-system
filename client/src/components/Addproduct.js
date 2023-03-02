@@ -14,9 +14,9 @@ const AddProduct = ({ socket }) => {
 
         // save the product data to an object to send to api
         let productData = {
-            "name": name,
-            "price": price,
-            "owner": owner
+            name: name,
+            price: price,
+            owner: owner
         }
 
         // send data to createproduct api with axios, send json object

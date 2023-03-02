@@ -8,7 +8,9 @@ const Products = () => {
     const navigate = useNavigate();
 
     const handleBidBtn = (product) =>
-        navigate(`/products/bid/${product.name}/${product.price}`);
+
+        //place product information in params after fetching 
+        navigate(`/products/bid/${product._id}/${product.name}/${product.price}`);
 
     //fetch the products from the database via the GET api created in express 
     useEffect(() => {
@@ -50,7 +52,7 @@ const Products = () => {
                             </tr>
                         ) : (
                             products.map((product) => (
-                                <tr key={`${product.name}${product.price}`}>
+                                <tr key={`${product._id}`}>
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
                                     <td>{product.last_bidder || 'None'}</td>

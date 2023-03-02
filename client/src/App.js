@@ -22,7 +22,7 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/products/add" element={<AddProduct socket={socket} />} />
           <Route
-            path="/products/bid/:name/:price"
+            path="/products/bid/:id/:name/:price"
             element={<BidProduct socket={socket} />}
           />
         </Routes>

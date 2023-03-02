@@ -18,12 +18,12 @@ const Home = () => {
 
         // send data to createuser api with axios, send json object
         axios.post('http://localhost:4000/createuser', {
-            "username": userName,
-            "name": name,
-            "password": password
+            username: userName,
+            name: name,
+            password: password
         })
         localStorage.setItem('userName', userName);
-        // navigate('/products');
+        navigate('/products');
 
     };
 

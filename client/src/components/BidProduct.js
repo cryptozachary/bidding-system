@@ -1,13 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import axios from 'axios'
 
-const BidProduct = () => {
-    const [userInput, setUserInput] = useState(0);
+const BidProduct = ({ socket }) => {
+    const { id, name, price } = useParams();
+    const [userInput, setUserInput] = useState(price);
     const navigate = useNavigate();
+    const [error, setError] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        navigate('/products');
+        if (userInput > Number(price)) {
+            socket.emit('bidProduct', {
+                userInput,
+                last_bidder: localStorage.getItem('userName'),
+                name,
+            });
+            axios.put(`http://localhost:4000/products/bid/${id}`, {
+                price: userInput
+            })
+            navigate('/products');
+        } else {
+            setError(true);
+        }
+
+
     };
 
     return (
@@ -15,9 +33,16 @@ const BidProduct = () => {
             <div className="bidproduct__container">
                 <h2>Place a Bid</h2>
                 <form className="bidProduct__form" onSubmit={handleSubmit}>
-                    <h3 className="bidProduct__name">Product Name</h3>
+                    <h3 className="bidProduct__name">{name}</h3>
 
                     <label htmlFor="amount">Bidding Amount</label>
+                    {/* The error message */}
+                    {error && (
+                        <p style={{ color: 'red' }}>
+                            The bidding amount must be greater than {price}
+                        </p>
+                    )}
+
                     <input
                         type="number"
                         name="amount"
