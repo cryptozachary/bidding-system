@@ -17,7 +17,6 @@ function App() {
         <Nav socket={socket} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<Home />} />
           <Route path='/feet' render={() => <h1>Feet!</h1>} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/add" element={<AddProduct socket={socket} />} />

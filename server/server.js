@@ -7,6 +7,8 @@ const UserModel = require('./models/Users')
 const ProductModel = require('./models/Products');
 const http = require('http').Server(app);
 const cors = require('cors');
+const bcrypt = require('bcrypt')
+const salt = 10
 
 console.log(process.env.MONGO_DB_ATLAS)
 
@@ -57,16 +59,35 @@ app.get('/getproducts', (req, res) => {
     })
 })
 
+//validate and check if user exist
+app.post('/getuser', (req, res) => {
+    try {
+        UserModel.find({
+            username: req.body.username,
+            password: req.body.password
+        }, (err, result) => {
+            console.log(result)
+        })
+
+    } catch (err) {
+        console.log(err)
+    }
+
+})
+
+
 //create users (always use async functions)
 app.post('/createuser', async (req, res) => {
     const user = {
         "username": req.body.username,
         "name": req.body.name,
-        "password": req.body.password
+        "password": ""
     }
-    // create new user using user model and past the data (user) to the database
-    const newUser = new UserModel(user)
     try {
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        user.password = hashedPassword;
+        // create new user using user model and pass the data (user) to the database
+        const newUser = new UserModel(user)
         await newUser.save()
         res.json(user)
         console.log('user created!')
@@ -108,12 +129,6 @@ app.put('/products/bid/:id', async (req, res) => {
     }
 })
 
-//test api
-app.get('/api', (req, res) => {
-    res.json({
-        message: 'Hello world',
-    });
-});
 
 http.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
