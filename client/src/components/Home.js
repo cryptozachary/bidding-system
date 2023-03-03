@@ -14,11 +14,20 @@ const Home = () => {
         register: true
     })
     const [buttonText, setButtonText] = useState({
-        signIn: "Sign In",
-        register: "Register"
+        signIn: "Need to Sign In to your account? - Please Click Here",
+        register: "Need to Register a new account? - Please Click Here"
+    })
+    const [apiError, setApiError] = useState({
+        message: ""
     })
 
     const navigate = useNavigate();
+
+    const theErrorFunction = () => {
+        switch (true) {
+            case 11000:
+        }
+    }
 
     console.log('rendered')
 
@@ -29,8 +38,11 @@ const Home = () => {
         axios.post('http://localhost:4000/getuser', {
             username: userName,
             password: password
-        }).then(response => {
-            console.log(response.data)
+        }).then(result => {
+            console.log(result.data)
+            setApiError(prev => {
+                return ({ ...prev, message: result.data.message })
+            })
         })
 
         localStorage.setItem('userName', userName);
@@ -46,9 +58,16 @@ const Home = () => {
             username: userName,
             name: name,
             password: password
+        }).then(result => {
+            console.log(result.data.error)
+            setApiError(prev => {
+                return ({ ...prev, message: result.data.error })
+            })
+        }).catch(error => {
+            console.log('Error:' + error)
         })
         localStorage.setItem('userName', userName);
-        navigate('/products');
+        //navigate('/products');
 
 
     };
@@ -75,7 +94,8 @@ const Home = () => {
 
             {userPath.register ?
                 <form className="home__form" onSubmit={(e) => handleSignIn(e)}>
-                    <h2 className='home-form-title'>Sign In</h2>
+                    <h2 className='home-form-title'>Please Sign In</h2>
+                    <h6 className='home-message'>{apiError ? apiError.message : ""}</h6>
                     <label htmlFor="username">Enter your username</label>
                     <input
                         type="text"
@@ -98,7 +118,8 @@ const Home = () => {
                     />
                     <button type="submit" className="home__cta">SIGN IN</button>
                 </form> : <form className="home__form" onSubmit={(e) => handleRegister(e)}>
-                    <h2 className='home-form-title'>Register</h2>
+                    <h2 className='home-form-title'>Please Register</h2>
+                    <h6 className='home-message'>{apiError ? apiError.message : ""}</h6>
                     <label htmlFor="username">Enter your username</label>
                     <input
                         type="text"

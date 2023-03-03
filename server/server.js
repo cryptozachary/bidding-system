@@ -19,7 +19,6 @@ mongoose.connect(process.env.MONGO_DB_ATLAS, {
 // test variable to save product data via socket 
 let globalProduct = {}
 
-
 const socketIO = require('socket.io')(http, {
     cors: {
         origin: "http://localhost:3000"
@@ -60,17 +59,17 @@ app.get('/getproducts', (req, res) => {
 })
 
 //validate and check if user exist
-app.post('/getuser', (req, res) => {
+app.post('/getuser', async (req, res) => {
     try {
-        UserModel.find({
-            username: req.body.username,
-            password: req.body.password
-        }, (err, result) => {
-            console.log(result)
-        })
+        const user = await UserModel.findOne({ username: req.body.username });
+        if (!user) return res.status(400).json({ error: 'User not found' });
 
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        if (!isMatch) return res.status(400).json({ error: 'Incorrect password' });
+
+        res.json({ message: 'Password is valid' });
     } catch (err) {
-        console.log(err)
+        res.json({ error: err.message });
     }
 
 })
@@ -78,12 +77,14 @@ app.post('/getuser', (req, res) => {
 
 //create users (always use async functions)
 app.post('/createuser', async (req, res) => {
+    //user information received in the requestbody
     const user = {
         "username": req.body.username,
         "name": req.body.name,
         "password": ""
     }
     try {
+        //first hash the password on the request body then add to user data
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
         user.password = hashedPassword;
         // create new user using user model and pass the data (user) to the database
@@ -92,7 +93,19 @@ app.post('/createuser', async (req, res) => {
         res.json(user)
         console.log('user created!')
     } catch (err) {
-        res.json({ message: err });
+
+        switch (true) {
+            case err.code == 11000:
+                res.json({
+                    error: "Duplicate user name found!"
+                });
+                break;
+            default: res.json({
+                error: `MongoDB error code # ${err.code}`
+            })
+        }
+        console.log(err)
+
     }
 })
 
