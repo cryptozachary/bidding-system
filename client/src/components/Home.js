@@ -13,6 +13,10 @@ const Home = () => {
         signIn: false,
         register: true
     })
+    const [route, setRoute] = useState({
+        createUser: "createuser",
+        getUser: "getuser"
+    })
     const [buttonText, setButtonText] = useState({
         signIn: "Need to Sign In to your account? - Please Click Here",
         register: "Need to Register a new account? - Please Click Here"
@@ -31,12 +35,13 @@ const Home = () => {
 
     console.log('rendered')
 
-    const handleSignIn = (e) => {
+    const handleUserPath = (e) => {
         e.preventDefault()
-        console.log('client' + userName)
+        let theRoute = userPath.signIn ? route.getUser : route.createUser
         // send data to sign in via api with axios, send json object
-        axios.post('http://localhost:4000/getuser', {
+        axios.post(`http://localhost:4000/${theRoute}`, {
             username: userName,
+            name: name,
             password: password
         }).then(result => {
             console.log(result.data)
@@ -45,32 +50,12 @@ const Home = () => {
             })
         })
 
-        localStorage.setItem('userName', userName);
+        console.log(userPath, theRoute)
         // navigate('/products');
 
     };
 
-    const handleRegister = (e) => {
-        e.preventDefault()
 
-        // send data to createuser api with axios, send json object
-        axios.post('http://localhost:4000/createuser', {
-            username: userName,
-            name: name,
-            password: password
-        }).then(result => {
-            console.log(result.data.error)
-            setApiError(prev => {
-                return ({ ...prev, message: result.data.error })
-            })
-        }).catch(error => {
-            console.log('Error:' + error)
-        })
-        localStorage.setItem('userName', userName);
-        //navigate('/products');
-
-
-    };
 
     const userPathAction = (e) => {
         e.preventDefault()
@@ -81,7 +66,6 @@ const Home = () => {
             }
             )
         });
-
     }
 
 
@@ -93,7 +77,7 @@ const Home = () => {
             </div>
 
             {userPath.register ?
-                <form className="home__form" onSubmit={(e) => handleSignIn(e)}>
+                <form className="home__form" onSubmit={(e) => handleUserPath(e)}>
                     <h2 className='home-form-title'>Please Sign In</h2>
                     <h6 className='home-message'>{apiError ? apiError.message : ""}</h6>
                     <label htmlFor="username">Enter your username</label>
@@ -117,7 +101,7 @@ const Home = () => {
                         minLength={6}
                     />
                     <button type="submit" className="home__cta">SIGN IN</button>
-                </form> : <form className="home__form" onSubmit={(e) => handleRegister(e)}>
+                </form> : <form className="home__form" onSubmit={(e) => handleUserPath(e)}>
                     <h2 className='home-form-title'>Please Register</h2>
                     <h6 className='home-message'>{apiError ? apiError.message : ""}</h6>
                     <label htmlFor="username">Enter your username</label>

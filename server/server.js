@@ -62,14 +62,14 @@ app.get('/getproducts', (req, res) => {
 app.post('/getuser', async (req, res) => {
     try {
         const user = await UserModel.findOne({ username: req.body.username });
-        if (!user) return res.status(400).json({ error: 'User not found' });
+        if (!user) return res.json({ message: 'User not found' });
 
         const isMatch = await bcrypt.compare(req.body.password, user.password);
-        if (!isMatch) return res.status(400).json({ error: 'Incorrect password' });
+        if (!isMatch) return res.json({ message: 'Incorrect password' });
 
         res.json({ message: 'Password is valid' });
     } catch (err) {
-        res.json({ error: err.message });
+        res.json({ message: err.message });
     }
 
 })
@@ -97,11 +97,11 @@ app.post('/createuser', async (req, res) => {
         switch (true) {
             case err.code == 11000:
                 res.json({
-                    error: "Duplicate user name found!"
+                    message: "Duplicate user name found!"
                 });
                 break;
             default: res.json({
-                error: `MongoDB error code # ${err.code}`
+                message: `MongoDB error code # ${err}`
             })
         }
         console.log(err)
