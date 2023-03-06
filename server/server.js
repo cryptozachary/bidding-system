@@ -90,7 +90,7 @@ app.post('/createuser', async (req, res) => {
         // create new user using user model and pass the data (user) to the database
         const newUser = new UserModel(user)
         await newUser.save()
-        res.json(user)
+        res.json({ message: 'User Created' })
         console.log('user created!')
     } catch (err) {
 
@@ -105,7 +105,6 @@ app.post('/createuser', async (req, res) => {
             })
         }
         console.log(err)
-
     }
 })
 

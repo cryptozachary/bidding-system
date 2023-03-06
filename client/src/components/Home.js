@@ -7,11 +7,10 @@ const Home = () => {
 
     //state variables
     const [userName, setUserName] = useState('')
-    const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [userPath, setUserPath] = useState({
-        signIn: false,
-        register: true
+        signIn: true,
+        register: false
     })
     const [route, setRoute] = useState({
         createUser: "createuser",
@@ -27,11 +26,6 @@ const Home = () => {
 
     const navigate = useNavigate();
 
-    const theErrorFunction = () => {
-        switch (true) {
-            case 11000:
-        }
-    }
 
     console.log('rendered')
 
@@ -41,7 +35,6 @@ const Home = () => {
         // send data to sign in via api with axios, send json object
         axios.post(`http://localhost:4000/${theRoute}`, {
             username: userName,
-            name: name,
             password: password
         }).then(result => {
             console.log(result.data)
@@ -73,16 +66,16 @@ const Home = () => {
     return (
         <div>
             <div className='user-path-button-container'>
-                <button className="user-path-button" type='submit' onClick={(e) => userPathAction(e)}>{userPath.signIn ? buttonText.signIn : buttonText.register}</button>
+                <button className="user-path-button" type='submit' onClick={(e) => userPathAction(e)}>{userPath.signIn ? buttonText.register : buttonText.signIn}</button>
             </div>
 
-            {userPath.register ?
+            {userPath.signIn ?
                 <form className="home__form" onSubmit={(e) => handleUserPath(e)}>
                     <h2 className='home-form-title'>Please Sign In</h2>
                     <h6 className='home-message'>{apiError ? apiError.message : ""}</h6>
-                    <label htmlFor="username">Enter your username</label>
+                    <label htmlFor="username">EMAIL</label>
                     <input
-                        type="text"
+                        type="email"
                         name="username"
                         className="home__input"
                         value={userName}
@@ -90,9 +83,9 @@ const Home = () => {
                         required
                         minLength={6}
                     />
-                    <label htmlFor="password">Enter your password</label>
+                    <label htmlFor="password">PASSWORD</label>
                     <input
-                        type="text"
+                        type="password"
                         name="password"
                         className="home__input"
                         value={password}
@@ -104,9 +97,9 @@ const Home = () => {
                 </form> : <form className="home__form" onSubmit={(e) => handleUserPath(e)}>
                     <h2 className='home-form-title'>Please Register</h2>
                     <h6 className='home-message'>{apiError ? apiError.message : ""}</h6>
-                    <label htmlFor="username">Enter your username</label>
+                    <label htmlFor="username">EMAIL</label>
                     <input
-                        type="text"
+                        type="email"
                         name="username"
                         className="home__input"
                         value={userName}
@@ -114,19 +107,9 @@ const Home = () => {
                         required
                         minLength={6}
                     />
-                    <label htmlFor="name">Enter your name</label>
+                    <label htmlFor="password">PASSWORD</label>
                     <input
-                        type="text"
-                        name="name"
-                        className="home__input"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                        minLength={6}
-                    />
-                    <label htmlFor="password">Enter your password</label>
-                    <input
-                        type="text"
+                        type="password"
                         name="password"
                         className="home__input"
                         value={password}
