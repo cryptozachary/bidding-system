@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
@@ -8,6 +8,7 @@ const Home = () => {
     //state variables
     const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
+    const confirmPassword = useRef(null)
     const [userPath, setUserPath] = useState({
         signIn: true,
         register: false
@@ -29,21 +30,28 @@ const Home = () => {
 
     console.log('rendered')
 
-    const handleUserPath = (e) => {
+    const handleUserPath = async (e) => {
         e.preventDefault()
         let theRoute = userPath.signIn ? route.getUser : route.createUser
         // send data to sign in via api with axios, send json object
-        axios.post(`http://localhost:4000/${theRoute}`, {
+        await axios.post(`http://localhost:4000/${theRoute}`, {
             username: userName,
             password: password
+
         }).then(result => {
             console.log(result.data)
             setApiError(prev => {
                 return ({ ...prev, message: result.data.message })
             })
+        }).catch(err => {
+            console.log(err)
         })
-
         console.log(userPath, theRoute)
+
+        //reset input fields
+        setUserName('')
+        setPassword('')
+        confirmPassword.current.value = ""
         // navigate('/products');
 
     };
@@ -59,6 +67,14 @@ const Home = () => {
             }
             )
         });
+
+        //reset input fields
+        setApiError(prev => {
+            return { message: '' }
+        })
+        setUserName('')
+        setPassword('')
+        confirmPassword.current.value = ""
     }
 
 
@@ -117,7 +133,23 @@ const Home = () => {
                         required
                         minLength={6}
                     />
-                    <button type="submit" className="home__cta">SIGN IN</button>
+                    <label htmlFor="confirm-password">CONFIRM PASSWORD</label>
+                    <input
+                        ref={confirmPassword}
+                        type="password"
+                        name="confirm-password"
+                        className="home__input"
+                        required
+                        minLength={6}
+                        onChange={(e) => {
+                            if (e.target.value === password) {
+                                setApiError({ message: '' });
+                            } else {
+                                setApiError({ message: 'Passwords do not match' });
+                            }
+                        }}
+                    />
+                    <button type="submit" className="home__cta" disabled={apiError.message === 'Passwords do not match'}>REGISTER</button>
                 </form>}
 
 

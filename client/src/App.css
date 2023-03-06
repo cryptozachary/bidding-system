@@ -160,8 +160,7 @@ th {
 
 footer {
   margin-top: auto;
-  background-color: black;
-  color: white;
+  background-color: #f0ebe3;
 }
 
 .footer {
@@ -170,5 +169,6 @@ footer {
   flex-direction: column;
   text-align: center;
   align-items: center;
-  height: 15%;
+  height: 5vh;
+  justify-content: space-around;
 }
