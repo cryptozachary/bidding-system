@@ -5,22 +5,29 @@ import axios from 'axios'
 
 const Home = () => {
 
-    //state variables
+    //input variables
     const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
     const confirmPassword = useRef(null)
+
+    //variable to determine if login or register form 
     const [userPath, setUserPath] = useState({
-        signIn: true,
-        register: false
+        signIn: true
     })
+
+    //variable to determine the api route url
     const [route, setRoute] = useState({
         createUser: "createuser",
         getUser: "getuser"
     })
+
+    //variable to determine the text for the button depending on which form (signIn or Register) is showing
     const [buttonText, setButtonText] = useState({
         signIn: "Need to Sign In to your account? - Please Click Here",
         register: "Need to Register a new account? - Please Click Here"
     })
+
+    //varable to display api error messages
     const [apiError, setApiError] = useState({
         message: ""
     })
