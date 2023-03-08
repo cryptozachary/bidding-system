@@ -14,7 +14,6 @@ const BidProduct = ({ socket }) => {
         if (userInput > Number(price)) {
             socket.emit('bidProduct', {
                 userInput,
-                last_bidder: localStorage.getItem('userName'),
                 name,
             });
             axios.put(`http://localhost:4000/products/bid/${id}`, {
@@ -28,9 +27,18 @@ const BidProduct = ({ socket }) => {
 
     };
 
+    const handleDelete = (e) => {
+        axios.delete(`http://localhost:4000/products/bid/${id}`, {
+            id: id
+        })
+        console.log(id)
+        navigate('/products')
+    }
+
     return (
         <div>
             <div className="bidproduct__container">
+                <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Delete</button>
                 <h2>Place a Bid</h2>
                 <form className="bidProduct__form" onSubmit={handleSubmit}>
                     <h3 className="bidProduct__name">{name}</h3>

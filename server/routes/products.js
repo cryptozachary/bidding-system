@@ -29,7 +29,6 @@ router.post('/addproduct', async (req, res) => {
     } catch (err) {
         res.json({ message: err });
     }
-
 })
 
 //update product price
@@ -46,6 +45,7 @@ router.put('/products/bid/:id', async (req, res) => {
     }
 })
 
+//update product price
 router.put('/products/bid/:id', async (req, res) => {
     console.log('this is the bid price' + " " + req.body.price + " " + req.params.id)
     try {
@@ -54,6 +54,18 @@ router.put('/products/bid/:id', async (req, res) => {
         }, { new: true });
         res.json(updatedProduct);
         console.log('Product Updated!')
+    } catch (err) {
+        res.json({ message: err });
+    }
+})
+
+//update product price
+router.delete('/products/bid/:id', async (req, res) => {
+    console.log('you are delting item:' + req.params.id)
+    try {
+        const productToDelete = await ProductModel.deleteOne({ _id: req.params.id });
+        res.json(productToDelete);
+        console.log('Product deleted!')
     } catch (err) {
         res.json({ message: err });
     }

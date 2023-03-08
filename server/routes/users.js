@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const salt = 10
 
 //validate and check if user exist
-router.post('/getuser', async (req, res) => {
+router.post('/loginuser', async (req, res) => {
     try {
         const user = await UserModel.findOne({ username: req.body.username });
         if (!user) return res.json({ message: 'User not found' });
@@ -13,7 +13,7 @@ router.post('/getuser', async (req, res) => {
         const isMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isMatch) return res.json({ message: 'Incorrect password' });
 
-        res.json({ message: 'Password is valid' });
+        res.json({ message: 'Password is valid', valid: true });
     } catch (err) {
         res.json({ message: err.message });
     }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
@@ -18,7 +18,7 @@ const Home = () => {
     //variable to determine the api route url
     const [route, setRoute] = useState({
         createUser: "createuser",
-        getUser: "getuser"
+        getUser: "loginuser"
     })
 
     //variable to determine the text for the button depending on which form (signIn or Register) is showing
@@ -37,6 +37,12 @@ const Home = () => {
 
     console.log('rendered')
 
+    useEffect(() => {
+        setTimeout(() => {
+            setApiError('')
+        }, 90000);
+
+    })
     const handleUserPath = async (e) => {
         e.preventDefault()
         let theRoute = userPath.signIn ? route.getUser : route.createUser
@@ -58,8 +64,12 @@ const Home = () => {
         //reset input fields
         setUserName('')
         setPassword('')
-        confirmPassword.current.value = ""
-        // navigate('/products');
+
+        if (confirmPassword.current) {
+            confirmPassword.current.value = ""
+        }
+
+        //navigate('/products');
 
     };
 

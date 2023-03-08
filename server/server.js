@@ -29,16 +29,25 @@ socketIO.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('🔥: A user disconnected');
     });
+
     //Listens for added products from the client
     socket.on('addProduct', (data) => {
         console.log(data)
-        globalProduct = data
-        console.log(globalProduct)
+        console.log("The addproduct info is:" + data)
+        socket.broadcast.emit('addProductResponse', data);
     })
+
+
     //Listens for new bids from the client
     socket.on('bidProduct', (data) => {
-        console.log(data);
+        console.log(data)
+        console.log("The bidproduct info is:" + JSON.stringify(data));
+        socket.broadcast.emit('bidProductResponse', data);
     });
+
+    //Sends back the data after placing a bid
+
+
 });
 
 //general middleware for routes
@@ -46,6 +55,8 @@ app.use(cookieParser())
 app.use(cors());
 app.use(express.json())
 
+
+//routes
 app.use('/', require('./routes/users'))
 app.use('/', require('./routes/products'))
 
