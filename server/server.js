@@ -7,7 +7,6 @@ const http = require('http').Server(app);
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
-
 console.log(process.env.MONGO_DB_ATLAS)
 
 mongoose.connect(process.env.MONGO_DB_ATLAS, {
@@ -33,7 +32,7 @@ socketIO.on('connection', (socket) => {
     //Listens for added products from the client
     socket.on('addProduct', (data) => {
         console.log(data)
-        console.log("The addproduct info is:" + data)
+        console.log("The addproduct info is:" + JSON.stringify(data))
         socket.broadcast.emit('addProductResponse', data);
     })
 
@@ -51,10 +50,10 @@ socketIO.on('connection', (socket) => {
 });
 
 //general middleware for routes
-app.use(cookieParser())
-app.use(cors());
-app.use(express.json())
 
+app.use(cors());
+app.use(cookieParser())
+app.use(express.json())
 
 //routes
 app.use('/', require('./routes/users'))

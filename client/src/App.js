@@ -13,6 +13,7 @@ const socket = socketIO.connect('http://localhost:4000');
 
 function App() {
   return (
+
     <Router>
       <div className='app-container'>
         <Nav socket={socket} />
@@ -28,6 +29,7 @@ function App() {
         <Footer socket={socket} />
       </div>
     </Router>
+
   );
 }
 
