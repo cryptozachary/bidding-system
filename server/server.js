@@ -33,6 +33,7 @@ socketIO.on('connection', (socket) => {
     socket.on('addProduct', (data) => {
         console.log(data)
         console.log("The addproduct info is:" + JSON.stringify(data))
+        //Sends back the data to client after adding product 
         socket.broadcast.emit('addProductResponse', data);
     })
 
@@ -41,16 +42,15 @@ socketIO.on('connection', (socket) => {
     socket.on('bidProduct', (data) => {
         console.log(data)
         console.log("The bidproduct info is:" + JSON.stringify(data));
+        //Sends back the data to client after placing a bid
         socket.broadcast.emit('bidProductResponse', data);
     });
 
-    //Sends back the data after placing a bid
 
 
 });
 
 //general middleware for routes
-
 app.use(cors());
 app.use(cookieParser())
 app.use(express.json())

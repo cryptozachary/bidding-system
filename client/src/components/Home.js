@@ -40,9 +40,9 @@ const Home = () => {
     useEffect(() => {
         setTimeout(() => {
             setApiError('')
-        }, 90000);
+        }, 10000);
 
-    })
+    }, [])
     const handleUserPath = async (e) => {
         e.preventDefault()
         let theRoute = userPath.signIn ? route.getUser : route.createUser
@@ -54,7 +54,7 @@ const Home = () => {
         }).then(result => {
             console.log(result.data)
             setApiError(prev => {
-                return ({ ...prev, message: result.data.message })
+                return ({ ...prev, message: result.data.email || result.data.password })
             })
         }).catch(err => {
             console.log(err)
@@ -91,7 +91,7 @@ const Home = () => {
         })
         setUserName('')
         setPassword('')
-        confirmPassword.current.value = ""
+        //confirmPassword.current.value = ""
     }
 
 

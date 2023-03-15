@@ -9,6 +9,8 @@ const BidProduct = ({ socket }) => {
     const navigate = useNavigate();
     const [error, setError] = useState(false);
 
+    const [deleteClicked, setDeleteClicked] = useState(false);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (userInput > Number(price)) {
@@ -28,6 +30,13 @@ const BidProduct = ({ socket }) => {
     };
 
     const handleDelete = (e) => {
+
+        //if deleteClicked state is true it proceeds to show delete button , otherwise exit function
+        if (!deleteClicked) {
+            setDeleteClicked(true);
+            return;
+        }
+
         axios.delete(`http://localhost:4000/products/bid/${id}`, {
             id: id
         })
@@ -38,7 +47,15 @@ const BidProduct = ({ socket }) => {
     return (
         <div>
             <div className="bidproduct__container">
-                <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Delete</button>
+                {deleteClicked ? (
+                    <>
+                        <p className='delete-confirmation'>Are you sure you want to delete this item?</p>
+                        <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Confirm</button>
+                        <button className="delete-button bidProduct__cta" type='button' onClick={() => setDeleteClicked(false)}>Cancel</button>
+                    </>
+                ) : (
+                    <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Delete</button>
+                )}
                 <h2>Place a Bid</h2>
                 <form className="bidProduct__form" onSubmit={handleSubmit}>
                     <h3 className="bidProduct__name">{name}</h3>

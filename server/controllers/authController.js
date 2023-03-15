@@ -2,6 +2,23 @@ const UserModel = require('../models/Users')
 const bcrypt = require('bcrypt')
 const salt = 10
 
+//handle errors
+const handleErrors = (err) => {
+    console.log(err.message, err.code)
+    let errors = { email: '', password: '' }
+
+    if (err.code === 11000) errors.email = 'Email already registered!'
+
+    //validation errors
+    if (err.message.includes('user validation failed')) {
+        Object.values(err.errors).forEach(({ properties }) => {
+            errors[properties.path] = properties.message
+        })
+    }
+
+    return errors
+}
+
 
 module.exports.loginUser = async (req, res) => {
     try {
@@ -32,21 +49,11 @@ module.exports.createUser = async (req, res) => {
         // create new user using user model and pass the data (user) to the database
         const newUser = new UserModel(user)
         await newUser.save()
-        res.json({ message: 'User Created' })
+        res.status(201).json({ message: 'User Created' })
         console.log('user created!')
     } catch (err) {
-
-        switch (true) {
-            case err.code == 11000:
-                res.json({
-                    message: "Duplicate user name found!"
-                });
-                break;
-            default: res.json({
-                message: `MongoDB error code # ${err}`
-            })
-        }
-        console.log(err)
+        const errors = handleErrors(err)
+        res.json(errors)
     }
 }
 
