@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import { useCookies } from 'react-cookie'
 
 
 const Home = () => {
-
     //input variables
     const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
     const confirmPassword = useRef(null)
+    const [authValid, setAuthValid] = useState(false)
 
     //variable to determine if login or register form 
     const [userPath, setUserPath] = useState({
@@ -16,13 +17,13 @@ const Home = () => {
     })
 
     //variable to determine the api route url
-    const [route, setRoute] = useState({
+    const [route] = useState({
         createUser: "createuser",
         getUser: "loginuser"
     })
 
     //variable to determine the text for the button depending on which form (signIn or Register) is showing
-    const [buttonText, setButtonText] = useState({
+    const [buttonText] = useState({
         signIn: "Need to Sign In to your account? - Please Click Here",
         register: "Need to Register a new account? - Please Click Here"
     })
@@ -34,6 +35,7 @@ const Home = () => {
 
     const navigate = useNavigate();
 
+    const [_, setCookies] = useCookies(['access_token'])
 
     console.log('rendered')
 
@@ -43,6 +45,9 @@ const Home = () => {
         }, 10000);
 
     }, [])
+
+
+    //handle signup or login 
     const handleUserPath = async (e) => {
         e.preventDefault()
         let theRoute = userPath.signIn ? route.getUser : route.createUser
@@ -52,7 +57,11 @@ const Home = () => {
             password: password
 
         }).then(result => {
-            console.log(result.data)
+            console.log(result.data, result.data.valid, result)
+
+            setCookies('access_token', result.data.token,)
+            window.localStorage.setItem('userID', result.data.userID)
+            if (result.data.valid) setAuthValid(true)
             setApiError(prev => {
                 return ({ ...prev, message: result.data.email || result.data.password })
             })
@@ -60,6 +69,7 @@ const Home = () => {
             console.log(err)
         })
         console.log(userPath, theRoute)
+
 
         //reset input fields
         setUserName('')
@@ -69,12 +79,14 @@ const Home = () => {
             confirmPassword.current.value = ""
         }
 
-        //navigate('/products');
+        if (authValid === true) {
+            navigate('/products');
+        }
 
     };
 
 
-
+    //handle userPath choice (signup or login?)
     const userPathAction = (e) => {
         e.preventDefault()
         console.log('userPathAction clicked')
@@ -84,7 +96,6 @@ const Home = () => {
             }
             )
         });
-
         //reset input fields
         setApiError(prev => {
             return { message: '' }

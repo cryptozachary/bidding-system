@@ -182,3 +182,8 @@ footer {
 .delete-confirmation {
   margin-bottom: 5px;
 }
+
+.links {
+  display: inline-flex;
+  gap: 5px;
+}

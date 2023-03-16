@@ -4,8 +4,8 @@ const app = express();
 const PORT = 4000;
 const mongoose = require('mongoose')
 const http = require('http').Server(app);
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 console.log(process.env.MONGO_DB_ATLAS)
 
@@ -51,13 +51,18 @@ socketIO.on('connection', (socket) => {
 });
 
 //general middleware for routes
-app.use(cors());
 app.use(cookieParser())
+app.use(cors({
+    credentials: true
+}));
 app.use(express.json())
 
 //routes
 app.use('/', require('./routes/users'))
 app.use('/', require('./routes/products'))
+app.use('/', require('./routes/cookies'))
+
+
 
 
 http.listen(PORT, () => {

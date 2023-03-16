@@ -1,6 +1,9 @@
 const UserModel = require('../models/Users')
 const bcrypt = require('bcrypt')
 const salt = 10
+const jwt = require('jsonwebtoken')
+const maxAge = 3 * 24 * 60 * 60
+
 
 //handle errors
 const handleErrors = (err) => {
@@ -19,6 +22,41 @@ const handleErrors = (err) => {
     return errors
 }
 
+const createToken = (id) => {
+    return (jwt.sign({ id }, 'elitas closet', {
+        expiresIn: maxAge
+    }))
+}
+
+module.exports.createUser = async (req, res) => {
+
+    //user information received in the requestbody
+    const user = {
+        "username": req.body.username,
+        "name": req.body.name,
+        "password": ""
+    }
+    try {
+
+        //first hash the password on the request body then add to user data
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        user.password = hashedPassword;
+
+        // create new user using user model and pass the data (user) to the database
+        const newUser = new UserModel(user)
+        await newUser.save()
+
+        //create web tokens and cookies
+        const token = createToken(newUser._id)
+        //res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true })
+        res.status(201).json({ message: 'User Created', token: token, userID: newUser._id, valid: true })
+        console.log('user created!')
+
+    } catch (err) {
+        const errors = handleErrors(err)
+        res.json(errors)
+    }
+}
 
 module.exports.loginUser = async (req, res) => {
     try {
@@ -28,32 +66,13 @@ module.exports.loginUser = async (req, res) => {
         const isMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isMatch) return res.json({ message: 'Incorrect password' });
 
-        res.json({ message: 'Password is valid!', valid: true });
+        const token = createToken(user._id)
+        //res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true })
+
+        res.json({ message: 'Password is valid! User Logged in!', token: token, userID: user._id, valid: true });
     } catch (err) {
         console.log(err)
         res.json({ message: `Error Message: ${err.message}` });
-    }
-}
-
-module.exports.createUser = async (req, res) => {
-    //user information received in the requestbody
-    const user = {
-        "username": req.body.username,
-        "name": req.body.name,
-        "password": ""
-    }
-    try {
-        //first hash the password on the request body then add to user data
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        user.password = hashedPassword;
-        // create new user using user model and pass the data (user) to the database
-        const newUser = new UserModel(user)
-        await newUser.save()
-        res.status(201).json({ message: 'User Created' })
-        console.log('user created!')
-    } catch (err) {
-        const errors = handleErrors(err)
-        res.json(errors)
     }
 }
 
