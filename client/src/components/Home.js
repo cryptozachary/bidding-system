@@ -9,7 +9,9 @@ const Home = () => {
     const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
     const confirmPassword = useRef(null)
-    const [authValid, setAuthValid] = useState(false)
+    const navigate = useNavigate();
+    const [cookies, setCookies] = useCookies(['access_token'])
+
 
     //variable to determine if login or register form 
     const [userPath, setUserPath] = useState({
@@ -33,10 +35,6 @@ const Home = () => {
         message: ""
     })
 
-    const navigate = useNavigate();
-
-    const [_, setCookies] = useCookies(['access_token'])
-
     console.log('rendered')
 
     useEffect(() => {
@@ -47,9 +45,12 @@ const Home = () => {
     }, [])
 
 
+
+
     //handle signup or login 
     const handleUserPath = async (e) => {
         e.preventDefault()
+
         let theRoute = userPath.signIn ? route.getUser : route.createUser
         // send data to sign in via api with axios, send json object
         await axios.post(`http://localhost:4000/${theRoute}`, {
@@ -59,14 +60,17 @@ const Home = () => {
         }).then(result => {
             console.log(result.data, result.data.valid, result)
 
-            setCookies('access_token', result.data.token,)
-            window.localStorage.setItem('userID', result.data.userID)
-            if (result.data.valid) setAuthValid(true)
+            if (result.data.valid) {
+                setCookies('access_token', result.data.token,)
+                window.localStorage.setItem('userID', result.data.userID)
+                navigate('/products');
+            };
             setApiError(prev => {
                 return ({ ...prev, message: result.data.email || result.data.password })
             })
         }).catch(err => {
-            console.log(err)
+            console.error('API request failed:', err);
+            setApiError(prev => ({ ...prev, message: 'An error occurred. Please try again.' }));
         })
         console.log(userPath, theRoute)
 
@@ -78,11 +82,6 @@ const Home = () => {
         if (confirmPassword.current) {
             confirmPassword.current.value = ""
         }
-
-        if (authValid === true) {
-            navigate('/products');
-        }
-
     };
 
 

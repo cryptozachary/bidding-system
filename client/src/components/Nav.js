@@ -6,14 +6,11 @@ import { useCookies } from 'react-cookie';
 
 const Nav = ({ socket }) => {
 
+    console.log('Nav: rendered')
+
     const [notification, setNotification] = useState('');
-    const [cookies, setCookies] = useCookies('access_token')
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token'])
     const navigate = useNavigate()
-
-    useEffect(() => {
-        // Check if the cookie value has changed and update the state
-
-    }, [RenderLogoutButton()]);
 
 
     //Listens after a product is added
@@ -39,7 +36,7 @@ const Nav = ({ socket }) => {
     }, [socket]);
 
     const logout = () => {
-        setCookies('access_token', "")
+        removeCookies('access_token')
         window.localStorage.removeItem("userID")
         navigate('/')
     }

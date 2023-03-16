@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios"
+import { useCookies } from 'react-cookie';
 
 const AddProduct = ({ socket }) => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [owner, setOwner] = useState('')
+    const [cookies, setCookies] = useCookies(['access_token'])
 
     const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ const AddProduct = ({ socket }) => {
         }
 
         // send data to createproduct api with axios, send json object
-        axios.post('http://localhost:4000/addproduct', productData)
+        axios.post('http://localhost:4000/addproduct', productData, { headers: { authorization: cookies } })
 
         // send socketio the same data
         socket.emit('addProduct', productData)
