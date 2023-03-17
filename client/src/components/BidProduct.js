@@ -2,25 +2,34 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios'
+import { useCookies } from 'react-cookie';
 
 const BidProduct = ({ socket }) => {
+
     const { id, name, price } = useParams();
     const [userInput, setUserInput] = useState(price);
     const navigate = useNavigate();
     const [error, setError] = useState(false);
+    const [cookies, setCookies] = useCookies(['access_token'])
 
     const [deleteClicked, setDeleteClicked] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // new product price
+        let newPrice = {
+            price: userInput
+        }
+
         if (userInput > Number(price)) {
             socket.emit('bidProduct', {
                 userInput,
                 name,
             });
-            axios.put(`http://localhost:4000/products/bid/${id}`, {
-                price: userInput
-            })
+
+            //send request to axios to increase price on item if price is bigger than previous price
+            axios.put(`http://localhost:4000/products/bid/${id}`, newPrice, { headers: { authorization: cookies.access_token } })
             navigate('/products');
         } else {
             setError(true);
@@ -30,6 +39,7 @@ const BidProduct = ({ socket }) => {
     };
 
     const handleDelete = (e) => {
+        e.preventDefault()
 
         //if deleteClicked state is true it proceeds to show delete button , otherwise exit function
         if (!deleteClicked) {
@@ -37,9 +47,13 @@ const BidProduct = ({ socket }) => {
             return;
         }
 
-        axios.delete(`http://localhost:4000/products/bid/${id}`, {
+        //create object for item id
+        let itemID = {
             id: id
-        })
+        }
+
+        // send request to axios to delete item with the item ID
+        axios.delete(`http://localhost:4000/products/bid/${id}`, itemID, { headers: { authorization: cookies.access_token } })
         console.log(id)
         navigate('/products')
     }

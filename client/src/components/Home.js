@@ -12,6 +12,8 @@ const Home = () => {
     const navigate = useNavigate();
     const [cookies, setCookies] = useCookies(['access_token'])
 
+    const maxAge = 3 * 24 * 60 * 60 * 1000
+
 
     //variable to determine if login or register form 
     const [userPath, setUserPath] = useState({
@@ -61,7 +63,7 @@ const Home = () => {
             console.log(result.data, result.data.valid, result)
 
             if (result.data.valid) {
-                setCookies('access_token', result.data.token,)
+                setCookies('access_token', result.data.token, { maxAge: maxAge })
                 window.localStorage.setItem('userID', result.data.userID)
                 navigate('/products');
             };

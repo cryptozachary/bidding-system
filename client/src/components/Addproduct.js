@@ -22,7 +22,7 @@ const AddProduct = ({ socket }) => {
         }
 
         // send data to createproduct api with axios, send json object
-        axios.post('http://localhost:4000/addproduct', productData, { headers: { authorization: cookies } })
+        axios.post('http://localhost:4000/addproduct', productData, { headers: { authorization: cookies.access_token } })
 
         // send socketio the same data
         socket.emit('addProduct', productData)
