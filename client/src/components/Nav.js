@@ -42,7 +42,9 @@ const Nav = ({ socket }) => {
     }
 
     const RenderLogoutButton = () => {
-        if (cookies.access_token) {
+        let userLogged = localStorage.getItem('userID') ? true : false
+
+        if (userLogged) {
             return <button onClick={logout}>Logout</button>;
         }
         return null;

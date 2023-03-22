@@ -12,7 +12,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [cookies, setCookies] = useCookies(['access_token'])
 
-    const maxAge = 3 * 24 * 60 * 60 * 1000
+    const maxAge = 3 * 24 * 60 * 60
 
 
     //variable to determine if login or register form 
@@ -63,7 +63,7 @@ const Home = () => {
             console.log(result.data, result.data.valid, result)
 
             if (result.data.valid) {
-                setCookies('access_token', result.data.token, { maxAge: maxAge })
+                //setCookies('access_token', result.data.token, { maxAge: maxAge, httpOnly: true, sameSite: true })
                 window.localStorage.setItem('userID', result.data.userID)
                 navigate('/products');
             };

@@ -18,7 +18,7 @@ let globalProduct = {}
 
 const socketIO = require('socket.io')(http, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "http://localhost:3000",
     }
 });
 
@@ -53,6 +53,7 @@ socketIO.on('connection', (socket) => {
 //general middleware for routes
 app.use(cookieParser())
 app.use(cors({
+    origin: 'http://localhost:3000',
     credentials: true
 }));
 app.use(express.json())
