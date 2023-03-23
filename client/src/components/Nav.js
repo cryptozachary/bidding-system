@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 
 
@@ -35,10 +36,14 @@ const Nav = ({ socket }) => {
         });
     }, [socket]);
 
-    const logout = () => {
-        removeCookies('access_token')
-        window.localStorage.removeItem("userID")
-        navigate('/')
+    const logout = async () => {
+
+        let response = await axios.get('http://localhost:4000/clear-cookies', { withCredentials: true })
+        if (response) {
+            //removeCookies('access_token')
+            window.localStorage.removeItem("userID")
+            navigate('/')
+        }
     }
 
     const RenderLogoutButton = () => {

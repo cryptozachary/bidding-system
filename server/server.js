@@ -6,6 +6,10 @@ const mongoose = require('mongoose')
 const http = require('http').Server(app);
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const path = require('path')
+
+// look for app in the build folder
+const filepath = path.join(__dirname, '../client/build')
 
 console.log(process.env.MONGO_DB_ATLAS)
 
@@ -18,7 +22,7 @@ let globalProduct = {}
 
 const socketIO = require('socket.io')(http, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "http://localhost:4000",
     }
 });
 
@@ -45,26 +49,32 @@ socketIO.on('connection', (socket) => {
         //Sends back the data to client after placing a bid
         socket.broadcast.emit('bidProductResponse', data);
     });
-
-
-
 });
 
 //general middleware for routes
+
+// Serve the static files from the React app
+app.use(express.static(filepath))
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:4000',
     credentials: true
 }));
-app.use(express.json())
 
 //routes
+app.get('/', (req, res) => {
+    res.sendFile('index.html', { root: filepath })
+})
+
 app.use('/', require('./routes/users'))
 app.use('/', require('./routes/products'))
 app.use('/', require('./routes/cookies'))
 
-
-
+app.get('/*', (req, res) => {
+    res.sendFile('index.html', { root: filepath })
+})
 
 http.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);

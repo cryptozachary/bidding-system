@@ -1,8 +1,10 @@
+require('dotenv').config()
 const UserModel = require('../models/Users')
 const bcrypt = require('bcrypt')
 const salt = 10
 const jwt = require('jsonwebtoken')
 const maxAge = 3 * 24 * 60 * 60
+const cookieParser = require('cookie-parser');
 
 //handle errors
 const handleErrors = (err) => {
@@ -22,7 +24,7 @@ const handleErrors = (err) => {
 }
 
 const createToken = (id) => {
-    return (jwt.sign({ id }, 'elitas closet', {
+    return (jwt.sign({ id }, process.env.SECRET_KEY, {
         expiresIn: maxAge
     }))
 }
@@ -46,7 +48,10 @@ module.exports.createUser = async (req, res, next) => {
 
         //create web tokens and cookies
         const token = createToken(newUser._id)
-        res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true })
+        res.cookie('jwt', token, {
+            maxAge: maxAge * 1000, httpOnly: true, SameSite: 'strict', Secure: true,
+            path: '/'
+        })
         res.status(201).json({ message: 'User Created', token: token, userID: newUser._id, valid: true })
         console.log('user created!')
 
@@ -65,9 +70,10 @@ module.exports.loginUser = async (req, res, next) => {
         if (!isMatch) return res.json({ message: 'Incorrect password' });
 
         const token = createToken(user._id)
-        res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true })
-        console.log(req.cookie)
-
+        res.cookie('jwt', token, {
+            maxAge: maxAge * 1000, httpOnly: true, SameSite: 'strict', Secure: true,
+            path: '/'
+        })
         res.json({ message: 'Password is valid! User Logged in!', token: token, userID: user._id, valid: true });
     } catch (err) {
         console.log(err)
@@ -76,10 +82,10 @@ module.exports.loginUser = async (req, res, next) => {
 }
 
 module.exports.verifyToken = (req, res, next) => {
-    const token = (req.cookies)
+    const token = (req.cookies.jwt)
     console.log('the token is:', token)
     if (token) {
-        jwt.verify(token, "elitas closet", (err) => {
+        jwt.verify(token, process.env.SECRET_KEY, (err) => {
             if (err) return res.sendStatus(403)
             next()
         })

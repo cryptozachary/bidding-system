@@ -10,3 +10,7 @@ module.exports.readCookies = (req, res) => {
     console.log(cookies)
     res.json(cookies)
 }
+
+module.exports.clearCookies = (req, res) => {
+    res.clearCookie('jwt', { httpOnly: true });
+}
