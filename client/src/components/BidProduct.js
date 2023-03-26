@@ -29,7 +29,7 @@ const BidProduct = ({ socket }) => {
             });
 
             //send request to axios to increase price on item if price is bigger than previous price
-            axios.put(`http://localhost:4000/products/bid/${id}`, newPrice, { headers: { authorization: cookies.access_token } })
+            axios.put(`http://localhost:4000/products/bid/${id}`, newPrice, { withCredentials: true })
             navigate('/products');
         } else {
             setError(true);

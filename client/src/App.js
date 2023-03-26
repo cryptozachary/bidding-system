@@ -9,29 +9,44 @@ import { useEffect, useState } from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
 import { useNavigate, Navigate } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
+import axios from 'axios';
 
 //socket library to be passed and utilized 
 const socket = socketIO.connect('http://localhost:4000');
 
-function PrivateRoute({ element, ...rest }) {
-  const [authenticated, setAuthenticated] = useState(false);
+function App() {
+  const navigate = useNavigate()
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // set state for when routes are accessed to activate useffect to verify link
+  const [routeState, setRouteState] = useState({
+    clicked: false
+  })
+  const routeFunction = () => {
+    setRouteState(true)
+    console.log('clicked - route function')
+  }
 
   useEffect(() => {
-    // Check if the user is authenticated here and set the `authenticated` state
-  }, []);
 
-  return (
-    <Route {...rest} element={authenticated ? element : <Navigate to="/login" />} />
-  );
-}
+    const checkRoute = async () => {
+      try {
+        let response = await axios.get('http://localhost:4000/checkRoute', { withCredentials: true })
+        setIsLoggedIn(true)
+        console.log(response.data)
+      } catch (err) {
+        navigate('/')
+        console.error(err)
+      }
+    }
+    checkRoute()
+  }, [routeState])
 
-
-function App() {
   return (
     <CookiesProvider>
       <Router>
         <div className='app-container'>
-          <Nav socket={socket} />
+          <Nav socket={socket} routeState={routeState} setRouteState={setRouteState} routeFunction={routeFunction} setIsLoggedIn={setIsLoggedIn} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
