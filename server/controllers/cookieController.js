@@ -12,5 +12,9 @@ module.exports.readCookies = (req, res) => {
 }
 
 module.exports.clearCookies = (req, res) => {
-    res.clearCookie('jwt', { httpOnly: true });
+    res.clearCookie('jwt', {
+        httpOnly: true, SameSite: 'strict', Secure: true,
+        path: '/'
+    });
+    res.redirect('/');
 }

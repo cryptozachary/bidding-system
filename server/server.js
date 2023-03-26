@@ -55,8 +55,11 @@ socketIO.on('connection', (socket) => {
 
 // Serve the static files from the React app
 app.use(express.static(filepath))
+//parses the body and attaches to req.body object 
 app.use(express.urlencoded({ extended: false }))
+//parses json data
 app.use(express.json())
+//parses cookie information
 app.use(cookieParser())
 app.use(cors({
     origin: 'http://localhost:4000',
@@ -68,6 +71,7 @@ app.get('/', (req, res) => {
     res.sendFile('index.html', { root: filepath })
 })
 
+app.use('/', require('./routes/app'))
 app.use('/', require('./routes/users'))
 app.use('/', require('./routes/products'))
 app.use('/', require('./routes/cookies'))

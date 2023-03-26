@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 
-const Nav = ({ socket, routeState, setRouteState, routeFunction, setIsLoggedIn }) => {
+const Nav = ({ socket, routeState, setRouteState, setIsLoggedIn }) => {
 
     console.log('Nav: rendered')
 
@@ -41,7 +41,7 @@ const Nav = ({ socket, routeState, setRouteState, routeFunction, setIsLoggedIn }
         let response = await axios.get('http://localhost:4000/clear-cookies', { withCredentials: true })
         if (response) {
             //removeCookies('access_token')
-            setIsLoggedIn(false)
+
             window.localStorage.removeItem("userID")
             navigate('/')
         }
@@ -60,7 +60,7 @@ const Nav = ({ socket, routeState, setRouteState, routeFunction, setIsLoggedIn }
         let userLogged = localStorage.getItem('userID') ? true : false
 
         if (userLogged) {
-            return <Link to='/products' onClick={() => { routeFunction() }}>Products</Link>;
+            return <Link to='/products' >Products</Link>;
         }
         return null;
     };
@@ -69,7 +69,7 @@ const Nav = ({ socket, routeState, setRouteState, routeFunction, setIsLoggedIn }
         let userLogged = localStorage.getItem('userID') ? true : false
 
         if (userLogged) {
-            return <Link to='/products/add' onClick={() => { routeFunction() }}>Add Products</Link>;
+            return <Link to='/products/add' >Add Products</Link>;
         }
         return null;
     };
@@ -77,9 +77,8 @@ const Nav = ({ socket, routeState, setRouteState, routeFunction, setIsLoggedIn }
     return (
         <nav className="navbar">
             <div className='links'>
-                <Link to='/' onClick={() => { routeFunction() }}>Home</Link>
+                <Link to='/' >Home</Link>
                 <RenderProductLink />
-                <RenderAddProductLink />
                 <RenderLogoutButton />
             </div>
             <div className="header">

@@ -81,6 +81,15 @@ module.exports.loginUser = async (req, res, next) => {
     }
 }
 
+module.exports.verifyRoute = (req, res) => {
+    try {
+        res.json({ message: 'Route Access Allowed' })
+    } catch (err) {
+        console.log(err)
+    }
+
+}
+
 module.exports.verifyToken = (req, res, next) => {
     const token = (req.cookies.jwt)
     console.log('the token is:', token)
