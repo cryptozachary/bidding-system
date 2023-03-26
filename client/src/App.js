@@ -14,7 +14,7 @@ import axios from 'axios';
 //socket library to be passed and utilized
 const socket = socketIO.connect('http://localhost:4000');
 
-function Content() {
+function Content({ isLoggedIn, setIsLoggedIn }) {
   const location = useLocation();
 
   useEffect(() => {
@@ -23,9 +23,13 @@ function Content() {
         let response = await axios.get('http://localhost:4000/checkRoute', {
           withCredentials: true,
         });
+        setIsLoggedIn(true)
+        console.log(isLoggedIn)
         console.log(response.data);
         console.log(`Path: ${location.pathname}`)
+
       } catch (err) {
+        setIsLoggedIn(false)
         console.log(err)
         console.log(`Path: ${location.pathname}`)
       }
@@ -33,9 +37,17 @@ function Content() {
     checkRoute();
   }, [location.pathname]);
 
+  if (!isLoggedIn && location.pathname !== '/') {
+    return <Navigate to='/'></Navigate>
+  }
+
+  // if (location.pathname !== '/') {
+  //   return <Navigate to='/'></Navigate>
+  // }
+
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home setIsLoggedIn={setIsLoggedIn} />} />
       <Route path="/products" element={<Products />} />
       <Route path="/products/add" element={<AddProduct socket={socket} />} />
       <Route
@@ -47,13 +59,21 @@ function Content() {
 }
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   return (
     <CookiesProvider>
       <Router>
         <div className="app-container">
-          <Nav socket={socket} />
-          <Content />
+          <Nav
+            socket={socket}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+          />
+          <Content
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+          />
           <Footer socket={socket} />
         </div>
       </Router>

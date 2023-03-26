@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useCookies } from 'react-cookie'
 
 
-const Home = () => {
+const Home = ({ setIsLoggedIn }) => {
     //input variables
     const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
@@ -61,10 +61,10 @@ const Home = () => {
 
         }).then(result => {
             console.log(result.data, result.data.valid, result)
-
             if (result.data.valid) {
                 //setCookies('access_token', result.data.token, { maxAge: maxAge, httpOnly: true, sameSite: true })
                 window.localStorage.setItem('userID', result.data.userID)
+                setIsLoggedIn(true)
                 navigate('/products');
             };
             setApiError(prev => {
@@ -104,6 +104,7 @@ const Home = () => {
         setUserName('')
         setPassword('')
         //confirmPassword.current.value = ""
+
     }
 
 

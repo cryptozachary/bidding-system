@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 
-const Nav = ({ socket, routeState, setRouteState, setIsLoggedIn }) => {
+const Nav = ({ socket, routeState, setRouteState, isLoggedIn, setIsLoggedIn }) => {
 
     console.log('Nav: rendered')
 
@@ -41,7 +41,8 @@ const Nav = ({ socket, routeState, setRouteState, setIsLoggedIn }) => {
         let response = await axios.get('http://localhost:4000/clear-cookies', { withCredentials: true })
         if (response) {
             //removeCookies('access_token')
-
+            setIsLoggedIn(false)
+            console.log(isLoggedIn)
             window.localStorage.removeItem("userID")
             navigate('/')
         }
