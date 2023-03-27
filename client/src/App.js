@@ -11,11 +11,13 @@ import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import axios from 'axios';
 
+
 //socket library to be passed and utilized
 const socket = socketIO.connect('http://localhost:4000');
 
 function Content({ isLoggedIn, setIsLoggedIn }) {
   const location = useLocation();
+  const [authStatusLoaded, setAuthStatusLoaded] = useState(false);
 
   useEffect(() => {
     const checkRoute = async () => {
@@ -32,10 +34,16 @@ function Content({ isLoggedIn, setIsLoggedIn }) {
         setIsLoggedIn(false)
         console.log(err)
         console.log(`Path: ${location.pathname}`)
+      } finally {
+        setAuthStatusLoaded(true);
       }
     };
     checkRoute();
   }, [location.pathname]);
+
+  if (!authStatusLoaded) {
+    return null;
+  }
 
   if (!isLoggedIn && location.pathname !== '/') {
     return <Navigate to='/'></Navigate>

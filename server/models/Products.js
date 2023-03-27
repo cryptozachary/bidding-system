@@ -8,12 +8,12 @@ const ProductSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    owner: {
+    description: {
         type: String,
         required: true,
     },
-    last_bidder: {
-        type: String,
+    imgFile: {
+        type: Buffer,
         required: false
     }
 })

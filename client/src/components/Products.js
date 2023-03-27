@@ -32,7 +32,7 @@ const Products = () => {
         <div>
             <div className="table__container">
                 <Link to="/products/add" className="products__cta">
-                    ADD PRODUCTS
+                    ADD ITEM
                 </Link>
 
                 <table>
@@ -40,8 +40,8 @@ const Products = () => {
                         <tr>
                             <th>Name</th>
                             <th>Price</th>
-                            <th>Last Bidder</th>
-                            <th>Creator</th>
+                            <th>Description</th>
+                            <th>Picture</th>
                             <th>Edit</th>
                         </tr>
                     </thead>
@@ -55,8 +55,8 @@ const Products = () => {
                                 <tr key={`${product._id}`}>
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
-                                    <td>{product.last_bidder || 'None'}</td>
-                                    <td>{product.owner}</td>
+                                    <td>{product.description || 'None'}</td>
+                                    <td>{product.imgFile || 'None'}</td>
                                     <td>
                                         <button onClick={() => handleBidBtn(product)}>Edit</button>
                                     </td>

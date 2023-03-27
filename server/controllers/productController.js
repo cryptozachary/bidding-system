@@ -13,7 +13,7 @@ module.exports.addProduct = async (req, res) => {
     const product = {
         "name": req.body.name,
         "price": req.body.price,
-        "owner": req.body.owner
+        "description": req.body.description
     }
     // create new user using user model and past the data (user) to the database
     const newProduct = new ProductModel(product)

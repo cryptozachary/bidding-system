@@ -61,7 +61,7 @@ const Nav = ({ socket, routeState, setRouteState, isLoggedIn, setIsLoggedIn }) =
         let userLogged = localStorage.getItem('userID') ? true : false
 
         if (userLogged) {
-            return <Link to='/products' >Products</Link>;
+            return <Link to='/products' >Items</Link>;
         }
         return null;
     };
@@ -83,7 +83,7 @@ const Nav = ({ socket, routeState, setRouteState, isLoggedIn, setIsLoggedIn }) =
                 <RenderLogoutButton />
             </div>
             <div className="header">
-                <h2>Bid Items</h2>
+                <h2>Elitas Closet</h2>
             </div>
             <div>
                 <p style={{ color: 'red' }}>{notification}</p>
