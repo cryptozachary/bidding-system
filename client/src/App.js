@@ -28,12 +28,12 @@ function Content({ isLoggedIn, setIsLoggedIn }) {
         setIsLoggedIn(true)
         console.log(isLoggedIn)
         console.log(response.data);
-        console.log(`Path: ${location.pathname}`)
+        console.log(`Correct Path: ${location.pathname}`)
 
       } catch (err) {
         setIsLoggedIn(false)
         console.log(err)
-        console.log(`Path: ${location.pathname}`)
+        console.log(`Error Path: ${location.pathname}`)
       } finally {
         setAuthStatusLoaded(true);
       }
@@ -48,10 +48,6 @@ function Content({ isLoggedIn, setIsLoggedIn }) {
   if (!isLoggedIn && location.pathname !== '/') {
     return <Navigate to='/'></Navigate>
   }
-
-  // if (location.pathname !== '/') {
-  //   return <Navigate to='/'></Navigate>
-  // }
 
   return (
     <Routes>

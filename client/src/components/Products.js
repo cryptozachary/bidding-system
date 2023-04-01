@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Image from './Image';
 
 const Products = () => {
     const [products, setProducts] = useState(null);
@@ -56,7 +57,7 @@ const Products = () => {
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
                                     <td>{product.description || 'None'}</td>
-                                    <td>{product.imgFile || 'None'}</td>
+                                    <td>{<Link to='/image'>Image</Link>}</td>
                                     <td>
                                         <button onClick={() => handleBidBtn(product)}>Edit</button>
                                     </td>

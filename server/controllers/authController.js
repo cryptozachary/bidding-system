@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt')
 const salt = 10
 const jwt = require('jsonwebtoken')
 const maxAge = 3 * 24 * 60 * 60
-const cookieParser = require('cookie-parser');
 
 //handle errors
 const handleErrors = (err) => {

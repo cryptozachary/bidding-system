@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path')
 
-// look for app in the build folder
+// look for app in the build folder ( if working within React)
 const filepath = path.join(__dirname, '../client/build')
 
 console.log(process.env.MONGO_DB_ATLAS)
@@ -16,9 +16,6 @@ console.log(process.env.MONGO_DB_ATLAS)
 mongoose.connect(process.env.MONGO_DB_ATLAS, {
     useNewUrlParser: true,
 })
-
-// test variable to save product data via socket 
-let globalProduct = {}
 
 const socketIO = require('socket.io')(http, {
     cors: {

@@ -13,6 +13,19 @@ const AddProduct = ({ socket }) => {
 
     const navigate = useNavigate();
 
+    const handleImageUpload = async (e) => {
+        const imageFile = e.target.files[0];
+        console.log(imageFile)
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+
+        reader.onloadend = () => {
+            setFile(reader.result);
+            console.log(reader.result)
+        };
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -49,7 +62,7 @@ const AddProduct = ({ socket }) => {
                         type="file"
                         id="image"
                         accept="image/*"
-                        onChange={(e) => setFile(e.target.files[0])}
+                        onChange={(e) => handleImageUpload(e)}
                         required
                     />
                 </div>
@@ -70,6 +83,7 @@ const AddProduct = ({ socket }) => {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required
+                        maxLength={125}
                     />
                 </div>
                 <div className="form-group">
