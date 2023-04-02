@@ -17,7 +17,7 @@ const AddProduct = ({ socket }) => {
         const imageFile = e.target.files[0];
         console.log(imageFile)
         const reader = new FileReader();
-        reader.readAsDataURL(imageFile);
+        reader.readAsBinaryString(imageFile);
 
         reader.onloadend = () => {
             setFile(reader.result);

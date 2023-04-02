@@ -7,6 +7,7 @@ const Products = () => {
     const [products, setProducts] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const [theImg, setTheImg] = useState(null)
 
     const handleBidBtn = (product) =>
 
@@ -19,15 +20,35 @@ const Products = () => {
             fetch('http://localhost:4000/getproducts')
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log(data)
+                    console.log('first chain data:', data)
                     //loads product data into state
                     setProducts(data);
                     //sets loading variable as false
                     setLoading(false);
+                    return data
+                }).then((data) => {
+                    console.log('second chain data:', data[0].imgFile)
+                    // Create a blob from the buffer
+                    const blob = new Blob([data[0].imgFile], { type: 'image/png' });
+
+                    // Create a URL for the blob
+                    const url = URL.createObjectURL(blob);
+
+                    // Set the URL as the source of an <img> element
+                    const img = document.createElement('img');
+                    img.src = url;
+
+                    // Append the <img> element to the DOM
+                    setTheImg(prev => {
+                        return img
+                    })
                 });
+
         };
         fetchProducts();
     }, []);
+
+
 
     return (
         <div>
@@ -57,7 +78,7 @@ const Products = () => {
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
                                     <td>{product.description || 'None'}</td>
-                                    <td>{<Link to='/image'>Image</Link>}</td>
+                                    <td><img src={theImg} /></td>
                                     <td>
                                         <button onClick={() => handleBidBtn(product)}>Edit</button>
                                     </td>

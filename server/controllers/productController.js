@@ -11,7 +11,7 @@ module.exports.getProducts = (req, res) => {
                 if (newProduct.imgFile) {
                     buffer = Buffer.from(newProduct.imgFile, 'binary');
                     fs.writeFileSync(`./images/${newProduct.name}.png`, buffer);
-                    newProduct.imgFile = `/images/${newProduct.name}.png`
+                    newProduct.imgFile = buffer
                     console.log('the imgfile is:', newProduct.imgFile)
                 }
                 return newProduct;
