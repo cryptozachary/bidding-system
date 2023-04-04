@@ -7,7 +7,7 @@ const Products = () => {
     const [products, setProducts] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const [theImg, setTheImg] = useState(null)
+    const [imgSrc, setImgSrc] = useState(null)
 
     const handleBidBtn = (product) =>
 
@@ -35,13 +35,7 @@ const Products = () => {
                     const url = URL.createObjectURL(blob);
 
                     // Set the URL as the source of an <img> element
-                    const img = document.createElement('img');
-                    img.src = url;
-
-                    // Append the <img> element to the DOM
-                    setTheImg(prev => {
-                        return img
-                    })
+                    setImgSrc(url);
                 });
 
         };
@@ -78,7 +72,12 @@ const Products = () => {
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
                                     <td>{product.description || 'None'}</td>
-                                    <td><img src={theImg} /></td>
+                                    <td><td>
+                                        <Link to={{
+                                            pathname: '/image',
+                                            state: { imgSrc: imgSrc }
+                                        }}>Image</Link>
+                                    </td></td>
                                     <td>
                                         <button onClick={() => handleBidBtn(product)}>Edit</button>
                                     </td>

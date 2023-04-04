@@ -5,6 +5,7 @@ import AddProduct from './components/Addproduct';
 import BidProduct from './components/BidProduct';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
+import Image from './components/Image';
 import { useEffect, useState } from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom';
@@ -58,6 +59,7 @@ function Content({ isLoggedIn, setIsLoggedIn }) {
         path="/products/bid/:id/:name/:price"
         element={<BidProduct socket={socket} />}
       />
+      <Route path='/image' element={<Image />} />
     </Routes>
   );
 }

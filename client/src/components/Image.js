@@ -1,9 +1,14 @@
-import React from 'react'
+import React from 'react';
 
-const Image = () => {
+const Image = (props) => {
+    const { imgSrc } = props.location.state || {};
+
+
     return (
-        <div>Image</div>
-    )
-}
+        <div>
+            {imgSrc ? <img src={imgSrc} alt="product image" /> : <div>No Picture</div>}
+        </div>
+    );
+};
 
-export default Image
+export default Image;
