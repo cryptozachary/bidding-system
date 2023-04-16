@@ -7,42 +7,55 @@ const Products = () => {
     const [products, setProducts] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const [imgSrc, setImgSrc] = useState(null)
+    const [imgSrcs, setImgSrcs] = useState([]);
 
     const handleBidBtn = (product) =>
-
-        //place product information in params after fetching 
         navigate(`/products/bid/${product._id}/${product.name}/${product.price}`);
 
-    //fetch the products from the database via the GET api created in express 
     useEffect(() => {
-        const fetchProducts = () => {
-            fetch('http://localhost:4000/getproducts')
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log('first chain data:', data)
-                    //loads product data into state
-                    setProducts(data);
-                    //sets loading variable as false
-                    setLoading(false);
-                    return data
-                }).then((data) => {
-                    console.log('second chain data:', data[0].imgFile)
-                    // Create a blob from the buffer
-                    const blob = new Blob([data[0].imgFile], { type: 'image/png' });
-
-                    // Create a URL for the blob
-                    const url = URL.createObjectURL(blob);
-
-                    // Set the URL as the source of an <img> element
-                    setImgSrc(url);
-                });
-
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('http://localhost:4000/getproducts');
+                const data = await response.json();
+                console.log('first chain data:', data);
+                setProducts(data);
+                setLoading(false);
+                return data;
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
         };
-        fetchProducts();
+
+        const loadImage = async (data, index) => {
+            try {
+                const blob = new Blob([data.imgFile], { type: 'image/png' });
+                const url = URL.createObjectURL(blob);
+                setImgSrcs((prevImgSrcs) => {
+                    const updatedImgSrcs = [...prevImgSrcs];
+                    updatedImgSrcs[index] = url;
+                    return updatedImgSrcs;
+                });
+                console.log('Image loaded successfully');
+            } catch (error) {
+                console.error('Error loading image:', error);
+            }
+        };
+
+        fetchProducts()
+            .then((data) => {
+                const initialImgSrcs = new Array(data.length).fill(null);
+                setImgSrcs(initialImgSrcs);
+                return data;
+            })
+            .then((data) =>
+                Promise.all(
+                    data.map((product, index) => loadImage(product, index))
+                )
+            )
+            .catch((error) => {
+                console.error('Error fetching products or loading image:', error);
+            });
     }, []);
-
-
 
     return (
         <div>
@@ -67,17 +80,26 @@ const Products = () => {
                                 <td>Loading</td>
                             </tr>
                         ) : (
-                            products.map((product) => (
+                            products.map((product, index) => (
                                 <tr key={`${product._id}`}>
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
                                     <td>{product.description || 'None'}</td>
-                                    <td><td>
-                                        <Link to={{
-                                            pathname: '/image',
-                                            state: { imgSrc: imgSrc }
-                                        }}>Image</Link>
-                                    </td></td>
+                                    <td>
+                                        {imgSrcs[index] ? (
+                                            <img src={imgSrcs[index]} alt="product image" />
+                                        ) : (
+                                            <p>Loading image...</p>
+                                        )}
+                                        <Link
+                                            to={{
+                                                pathname: '/image',
+                                                state: { imgSrc: imgSrcs[index] },
+                                            }}
+                                        >
+                                            Image
+                                        </Link>
+                                    </td>
                                     <td>
                                         <button onClick={() => handleBidBtn(product)}>Edit</button>
                                     </td>
@@ -89,6 +111,6 @@ const Products = () => {
             </div>
         </div>
     );
-};
+}
 
 export default Products;

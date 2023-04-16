@@ -9,8 +9,8 @@ module.exports.getProducts = (req, res) => {
             const products = result.map(product => {
                 const newProduct = { ...product._doc };
                 if (newProduct.imgFile) {
-                    buffer = Buffer.from(newProduct.imgFile, 'binary');
-                    fs.writeFileSync(`./images/${newProduct.name}.png`, buffer);
+                    let buffer = Buffer.from(newProduct.imgFile).toString('base64');
+                    //fs.writeFileSync(`./images/${newProduct.name}.png`, buffer);
                     newProduct.imgFile = buffer
                     console.log('the imgfile is:', newProduct.imgFile)
                 }
