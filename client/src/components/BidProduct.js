@@ -90,7 +90,7 @@ const BidProduct = ({ socket }) => {
                         required
                     />
 
-                    <button className="bidProduct__cta">SEND</button>
+                    <button className="bidProduct__cta">UPDATE</button>
                 </form>
             </div>
         </div>

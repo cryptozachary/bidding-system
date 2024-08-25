@@ -8,12 +8,7 @@ module.exports.getProducts = (req, res) => {
         } else {
             const products = result.map(product => {
                 const newProduct = { ...product._doc };
-                if (newProduct.imgFile) {
-                    let buffer = Buffer.from(newProduct.imgFile).toString('base64');
-                    //fs.writeFileSync(`./images/${newProduct.name}.png`, buffer);
-                    newProduct.imgFile = buffer
-                    console.log('the imgfile is:', newProduct.imgFile)
-                }
+                // The imgFile is already a complete data URL, so we don't need to modify it
                 return newProduct;
             });
             res.json(products);
@@ -53,7 +48,7 @@ module.exports.updateProduct = async (req, res) => {
 }
 
 module.exports.deleteProduct = async (req, res) => {
-    console.log('you are delting item:' + req.params.id)
+    console.log('you are deleting item:' + req.params.id)
     try {
         const productToDelete = await ProductModel.deleteOne({ _id: req.params.id });
         res.json(productToDelete);

@@ -1,8 +1,9 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-const Image = (props) => {
-    const { imgSrc } = props.location.state || {};
-
+const Image = () => {
+    const location = useLocation();
+    const imgSrc = location.state?.imgSrc;
 
     return (
         <div>

@@ -32,7 +32,7 @@ function Content({ isLoggedIn, setIsLoggedIn }) {
         let response = await axios.get('http://localhost:4000/checkRoute', {
           withCredentials: true,
         });
-
+        console.log(`Response: ${response}`)
         // Updating the isLoggedIn state if the user is authenticated
         setIsLoggedIn(true)
         console.log(isLoggedIn)
@@ -60,6 +60,11 @@ function Content({ isLoggedIn, setIsLoggedIn }) {
   // Redirecting the user to the Home component if they are not authenticated and not on the Home route
   if (!isLoggedIn && location.pathname !== '/') {
     return <Navigate to='/'></Navigate>
+  }
+
+  // Redirecting the user to the produts component if they are authenticated and on the Home route
+  if (isLoggedIn && location.pathname === '/') {
+    return <Navigate to='/products'></Navigate>
   }
 
   // Rendering the routes if the user is authenticated

@@ -15,6 +15,7 @@ console.log(process.env.MONGO_DB_ATLAS)
 
 mongoose.connect(process.env.MONGO_DB_ATLAS, {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
 })
 
 const socketIO = require('socket.io')(http, {
