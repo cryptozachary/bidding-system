@@ -10,8 +10,13 @@ const AddProduct = ({ socket }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
+    const [cancel, setCancel] = useState(false)
 
     const navigate = useNavigate();
+
+    const handleCancel = () => {
+        navigate('/products');
+    };
 
     const handleImageUpload = async (e) => {
         const imageFile = e.target.files[0];
@@ -44,6 +49,7 @@ const AddProduct = ({ socket }) => {
             setDescription("");
             setPrice("");
             setFile(null);
+
             // send socketio the same data
             socket.emit('addProduct', productData)
             navigate('/products');
@@ -96,7 +102,12 @@ const AddProduct = ({ socket }) => {
                         required
                     />
                 </div>
-                <button type="submit">Add Item</button>
+                <div className='addButtonDiv'>
+                    <button type="submit" className='products__cta add_item_extra'>Add Item</button>
+                    <div className='justForCancel'>
+                        <button className="delete-button bidProduct__cta" type='button' onClick={handleCancel}>Cancel</button>
+                    </div>
+                </div>
             </form>
         </div>
     );

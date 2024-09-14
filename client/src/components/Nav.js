@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
@@ -12,6 +12,7 @@ const Nav = ({ socket, routeState, setRouteState, isLoggedIn, setIsLoggedIn }) =
     const [notification, setNotification] = useState('');
     const [cookies, setCookies, removeCookies] = useCookies(['access_token'])
     const navigate = useNavigate()
+    const location = useLocation()
 
 
     //Listens after a product is added
@@ -52,16 +53,17 @@ const Nav = ({ socket, routeState, setRouteState, isLoggedIn, setIsLoggedIn }) =
         let userLogged = localStorage.getItem('userID') ? true : false
 
         if (userLogged) {
-            return <button onClick={logout} >Logout</button>;
+            return <button className='button2' onClick={logout} >Logout</button>;
         }
         return null;
     };
 
     const RenderProductLink = () => {
         let userLogged = localStorage.getItem('userID') ? true : false
+        let thePath = location.pathname !== '/products' ? true : false
 
-        if (userLogged) {
-            return <Link to='/products' >Items</Link>;
+        if (userLogged && thePath) {
+            return <Link to='/products' className='button'>Items</Link>;
         }
         return null;
     };
@@ -70,20 +72,26 @@ const Nav = ({ socket, routeState, setRouteState, isLoggedIn, setIsLoggedIn }) =
         let userLogged = localStorage.getItem('userID') ? true : false
 
         if (userLogged) {
-            return <Link to='/products/add' >Add Products</Link>;
+            return <Link to='/products/add' className='button'>Add Products</Link>;
         }
         return null;
     };
 
+    const RenderHomeLink = () => {
+        let thePath = location.pathname === '/products' || location.pathname === '/products/add' || location.pathname === `/products/bid` ? true : false
+        if (thePath) { return };
+        return <Link to='/' className='button'>Home</Link>;
+    }
+
     return (
         <nav className="navbar">
             <div className='links'>
-                <Link to='/' >Home</Link>
+                <RenderHomeLink />
                 <RenderProductLink />
                 <RenderLogoutButton />
             </div>
             <div className="header">
-                <h2>Elitas Closet</h2>
+                <h2>ELITAS CLOSET</h2>
             </div>
             <div>
                 <p style={{ color: 'red' }}>{notification}</p>

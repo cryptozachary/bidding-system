@@ -26,6 +26,13 @@ const Products = () => {
         fetchProducts();
     }, []);
 
+    const imgStyles = {
+        minWidth: '100px',
+        maxWidth: '100px',
+        minHeight: '100px',
+        maxHeight: '100px'
+    }
+
     return (
         <div>
             <div className="table__container">
@@ -52,17 +59,17 @@ const Products = () => {
                             products.map((product) => (
                                 <tr key={product._id}>
                                     <td>{product.name}</td>
-                                    <td>{product.price}</td>
+                                    <td>{`$${product.price}`}</td>
                                     <td>{product.description || 'None'}</td>
                                     <td>
                                         {product.imgFile ? (
-                                            <img src={product.imgFile} alt={product.name} style={{ maxWidth: '100px' }} />
+                                            <img src={product.imgFile} alt={product.name} style={imgStyles} />
                                         ) : (
                                             <p>No image available</p>
                                         )}
                                     </td>
                                     <td>
-                                        <button onClick={() => handleBidBtn(product)}>Edit</button>
+                                        <button className='button2' onClick={() => handleBidBtn(product)}>Edit</button>
                                     </td>
                                 </tr>
                             ))

@@ -89,17 +89,22 @@ module.exports.verifyRoute = (req, res) => {
 
 }
 
-module.exports.verifyToken = (req, res, next) => {
+module.exports.verifyToken = async (req, res, next) => {
     const token = (req.cookies.jwt)
     console.log('the token is:', token)
     if (token) {
-        jwt.verify(token, process.env.SECRET_KEY, (err) => {
-            if (err) return res.sendStatus(403)
-            next()
-        })
+        try {
+            const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+            const user = await UserModel.findById(decodedToken.id);
+            if (!user) {
+                return res.sendStatus(401);
+            }
+            req.user = user;
+            next();
+        } catch (err) {
+            return res.sendStatus(403);
+        }
     } else {
-        res.sendStatus(401)
-        console.log('failed')
+        res.sendStatus(401);
     }
 }
-

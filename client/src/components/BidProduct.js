@@ -61,15 +61,6 @@ const BidProduct = ({ socket }) => {
     return (
         <div>
             <div className="bidproduct__container">
-                {deleteClicked ? (
-                    <>
-                        <p className='delete-confirmation'>Are you sure you want to delete this item?</p>
-                        <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Confirm</button>
-                        <button className="delete-button bidProduct__cta" type='button' onClick={() => setDeleteClicked(false)}>Cancel</button>
-                    </>
-                ) : (
-                    <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Delete</button>
-                )}
                 <h2>Place a Bid</h2>
                 <form className="bidProduct__form" onSubmit={handleSubmit}>
                     <h3 className="bidProduct__name">{name}</h3>
@@ -89,8 +80,18 @@ const BidProduct = ({ socket }) => {
                         onChange={(e) => setUserInput(e.target.value)}
                         required
                     />
-
-                    <button className="bidProduct__cta">UPDATE</button>
+                    {deleteClicked ? (
+                        <>
+                            <p className='delete-confirmation'>Are you sure you want to delete this item?</p>
+                            <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Confirm</button>
+                            <button className="delete-button bidProduct__cta" type='button' onClick={() => setDeleteClicked(false)}>Cancel</button>
+                        </>
+                    ) : (
+                        <>
+                            <button className="bidProduct__cta">UPDATE</button>
+                            <button className="delete-button bidProduct__cta" type='button' onClick={handleDelete}>Delete</button>
+                        </>
+                    )}
                 </form>
             </div>
         </div>

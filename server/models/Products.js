@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
 const ProductSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',  // This should match the name you used in mongoose.model for users
+        required: true
+    },
     name: {
         type: String,
         required: true,
     },
     price: {
-        type: Number,
+        type: String,
         required: true,
     },
     description: {
